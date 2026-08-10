@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#f5fbff" />
+<title>RBCC HRL EX Digital Journey · V1.0</title>
+<style>
+:root{
+  --ink:#163044;
+  --muted:#678091;
+  --line:#dfeaf0;
+  --paper:#f7fbfd;
+  --white:#fff;
+  --blue:#7bc8df;
+  --deep:#265e7c;
+  --sea:#dff4f7;
+  --sand:#f6ead0;
+  --mint:#dcefdc;
+  --rose:#f8e4e0;
+  --sun:#f8d77a;
+  --shadow:0 16px 45px rgba(61,104,128,.12);
+  --shadow-sm:0 8px 24px rgba(61,104,128,.09);
+  --radius:26px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#edf6f9}
+body{
+  margin:0;
+  overflow-x:hidden;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 5% 2%, rgba(143,215,231,.27), transparent 25%),
+    linear-gradient(180deg,#f7fcfe 0%,#f4fafc 52%,#fff 100%);
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{
+  width:min(100%,760px);
+  max-width:760px;
+  margin:0 auto;
+  min-height:100vh;
+  overflow-x:clip;
+  background:rgba(255,255,255,.54);
+  box-shadow:0 0 80px rgba(51,99,122,.08);
+  padding-bottom:108px;
+}
+main{width:100%;max-width:100%;min-width:0;overflow-x:clip}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px 10px;
+  background:rgba(247,252,254,.86);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(216,233,240,.65);
+}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:-.02em}
+.brand-dot{
+  width:34px;height:34px;border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#fff,#dff4f7);
+  border:1px solid #dcebef;
+  box-shadow:var(--shadow-sm);
+}
+.brand small{display:block;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.vbadge{
+  border:1px solid #d8e7ed;background:#fff;color:#567081;
+  padding:7px 10px;border-radius:999px;font-size:11px;font-weight:800;
+}
+.hero{padding:14px 18px 0}
+.hero-card{
+  position:relative;overflow:hidden;
+  min-height:430px;border-radius:32px;
+  background:linear-gradient(180deg,#dff5f9 0%,#eaf8f7 47%,#f6efd9 100%);
+  box-shadow:var(--shadow);
+  border:1px solid rgba(255,255,255,.9);
+}
+.hero-copy{position:relative;z-index:3;padding:34px 26px 0}
+.eyebrow{
+  display:inline-flex;gap:7px;align-items:center;
+  padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.75);
+  border:1px solid rgba(255,255,255,.95);
+  font-size:11px;font-weight:800;color:#49738b;
+  box-shadow:0 8px 20px rgba(76,126,151,.07);
+}
+h1{font-size:38px;line-height:1.02;letter-spacing:-.055em;margin:14px 0 10px;max-width:420px}
+.hero-copy p{color:#4f7287;line-height:1.65;margin:0;max-width:420px;font-size:14px}
+.primary{
+  margin-top:20px;border:0;border-radius:16px;padding:13px 17px;
+  font-weight:850;color:white;background:#275f7d;
+  box-shadow:0 12px 24px rgba(39,95,125,.18);
+}
+.primary:active{transform:translateY(1px)}
+.hero-art{position:absolute;inset:auto 0 0;height:235px}
+.wave{position:absolute;left:-8%;width:116%;border-radius:50%}
+.wave.a{height:108px;bottom:-45px;background:#a8deea;opacity:.82;transform:rotate(-2deg)}
+.wave.b{height:88px;bottom:-28px;background:#70bdd4;opacity:.72;transform:rotate(4deg)}
+.island{
+  position:absolute;right:19px;bottom:35px;width:192px;height:82px;
+  background:linear-gradient(180deg,#d8e3b9,#b9cb94);
+  border-radius:53% 47% 48% 52%/55% 58% 42% 45%;
+  box-shadow:inset 0 -10px 0 rgba(116,146,89,.09),0 16px 24px rgba(60,105,119,.12);
+}
+.lighthouse{position:absolute;right:74px;bottom:83px;width:55px;height:122px;z-index:2}
+.lh-body{
+  position:absolute;bottom:0;left:10px;width:38px;height:93px;
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);
+  background:repeating-linear-gradient(180deg,#fff 0 25px,#ef7b72 25px 45px);
+  box-shadow:0 6px 12px rgba(61,93,107,.12);
+}
+.lh-top{position:absolute;left:6px;top:8px;width:47px;height:27px;border-radius:12px 12px 6px 6px;background:#315f75;border:4px solid #fff}
+.lh-roof{position:absolute;left:3px;top:0;width:53px;height:15px;background:#315f75;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.lightbeam{
+  position:absolute;right:98px;bottom:171px;width:210px;height:76px;
+  background:linear-gradient(90deg,rgba(255,241,169,0),rgba(255,236,133,.65),rgba(255,241,169,0));
+  clip-path:polygon(0 42%,100% 0,100% 100%,0 58%);
+  opacity:.65;transform-origin:right center;animation:beam 6s ease-in-out infinite;
+}
+@keyframes beam{0%,100%{transform:rotate(-5deg);opacity:.35}50%{transform:rotate(5deg);opacity:.72}}
+.star{position:absolute;color:#fff9c6;font-size:22px;filter:drop-shadow(0 3px 5px rgba(239,199,83,.25));animation:float 4s ease-in-out infinite}
+.star.s1{left:35px;bottom:105px}.star.s2{left:96px;bottom:55px;font-size:16px;animation-delay:1.2s}.star.s3{right:26px;bottom:183px;font-size:13px;animation-delay:.6s}
+@keyframes float{50%{transform:translateY(-8px) rotate(8deg)}}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 18px 0}
+.stat{background:#fff;border:1px solid #e2edf1;border-radius:18px;padding:13px 12px;box-shadow:var(--shadow-sm)}
+.stat strong{font-size:21px;display:block;letter-spacing:-.04em}.stat span{font-size:10px;color:var(--muted);font-weight:700}
+
+section{width:100%;max-width:100%;min-width:0;padding:28px 18px 0;overflow-x:clip}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:14px}
+.section-head h2{font-size:23px;letter-spacing:-.035em;margin:0}
+.section-head p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.text-btn{border:0;background:none;color:#39708d;font-weight:800;font-size:12px;padding:5px 0}
+
+.dimension-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.dimension{
+  position:relative;min-height:146px;padding:18px;border-radius:24px;border:1px solid rgba(255,255,255,.8);
+  overflow:hidden;text-align:left;color:var(--ink);box-shadow:var(--shadow-sm)
+}
+.dimension.care{background:linear-gradient(135deg,#fbe9e5,#fff7f1)}
+.dimension.grow{background:linear-gradient(135deg,#e4f2df,#f7fbeb)}
+.dimension.shine{background:linear-gradient(135deg,#e1f1f7,#f2f8ff)}
+.dimension .icon{font-size:28px}
+.dimension h3{margin:17px 0 3px;font-size:20px;letter-spacing:-.025em}
+.dimension p{margin:0;color:#667e8c;font-size:12px}
+.dimension .count{
+  position:absolute;right:16px;top:16px;background:rgba(255,255,255,.62);
+  border:1px solid rgba(255,255,255,.92);padding:6px 9px;border-radius:999px;font-size:10px;font-weight:800
+}
+.dimension:after{
+  content:"→";position:absolute;right:18px;bottom:15px;
+  width:31px;height:31px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.67);font-weight:900
+}
+.search-wrap{
+  background:#fff;border:1px solid #dfebf0;box-shadow:var(--shadow-sm);
+  display:flex;gap:10px;align-items:center;border-radius:20px;padding:12px 14px
+}
+.search-wrap input{width:100%;border:0;outline:0;color:var(--ink);background:transparent;font-size:14px}
+.search-wrap input::placeholder{color:#9aaeBA}
+.search-icon{font-size:16px}
+.quick-chips{display:flex;gap:8px;overflow:auto;padding:10px 1px 2px;scrollbar-width:none}
+.quick-chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;border:1px solid #dde9ee;background:#fff;border-radius:999px;padding:8px 11px;
+  color:#587284;font-size:11px;font-weight:750;white-space:nowrap
+}
+.chip.active{background:#275f7d;color:white;border-color:#275f7d}
+
+.featured-scroll{display:flex;gap:12px;overflow:auto;padding:2px 1px 8px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.featured-scroll::-webkit-scrollbar{display:none}
+.feature-card{
+  flex:0 0 78%;scroll-snap-align:start;min-height:185px;border-radius:25px;padding:18px;
+  border:1px solid #dfebef;background:#fff;box-shadow:var(--shadow-sm);position:relative;overflow:hidden
+}
+.feature-card:nth-child(1){background:linear-gradient(145deg,#dceff7,#f7faf2)}
+.feature-card:nth-child(2){background:linear-gradient(145deg,#e8f2df,#fff)}
+.feature-card:nth-child(3){background:linear-gradient(145deg,#fbe9df,#fff)}
+.feature-card:nth-child(4){background:linear-gradient(145deg,#eee7fb,#fff)}
+.feature-label{display:inline-flex;padding:6px 9px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);border-radius:999px;font-size:10px;font-weight:800;color:#567080}
+.feature-card h3{font-size:21px;letter-spacing:-.03em;margin:27px 0 6px;max-width:86%}
+.feature-card p{font-size:11px;color:#657f8d;margin:0;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.feature-arrow{position:absolute;right:16px;bottom:15px;width:36px;height:36px;border-radius:50%;border:0;background:#fff;box-shadow:var(--shadow-sm);font-weight:900;color:#315f75}
+
+.explore-toolbar{display:flex;flex-direction:column;gap:10px}
+.filter-row{display:flex;gap:8px;overflow:auto;scrollbar-width:none;padding-bottom:2px}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-btn{flex:none;border:1px solid #dce9ee;background:#fff;border-radius:14px;padding:9px 11px;font-size:11px;color:#597383;font-weight:750}
+.filter-btn.active{background:#285e7b;color:#fff;border-color:#285e7b}
+.result-meta{display:flex;align-items:center;justify-content:space-between;color:#718694;font-size:11px;margin:15px 2px 10px}
+.project-list{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:10px;
+  width:100%;max-width:100%;min-width:0;overflow:hidden
+}
+.project-card{
+  display:flex;gap:13px;align-items:center;padding:14px;
+  border-radius:21px;border:1px solid #e0ebef;background:#fff;
+  box-shadow:0 5px 18px rgba(61,104,128,.06);
+  text-align:left;width:100%;max-width:100%;min-width:0;overflow:hidden;color:var(--ink)
+}
+.project-icon{
+  width:50px;min-width:50px;height:50px;border-radius:16px;display:grid;place-items:center;
+  background:#edf7fa;font-size:22px
+}
+.project-main{min-width:0;max-width:100%;overflow:hidden;flex:1}
+.project-top{display:flex;gap:7px;align-items:center;margin-bottom:4px}
+.type-tag{font-size:9px;font-weight:850;color:#557587;background:#f0f6f8;border-radius:999px;padding:4px 7px}
+.project-card h3{
+  font-size:15px;margin:0 0 4px;line-height:1.35;letter-spacing:-.015em;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical
+}
+.project-card p{
+  font-size:10.5px;line-height:1.55;color:#708694;margin:0;
+  white-space:normal;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical
+}
+.project-side{align-self:center;color:#7c97a7;font-weight:900}
+.empty{padding:32px 18px;text-align:center;color:#708694;background:#fff;border-radius:20px;border:1px dashed #dce8ed}
+
+.bottom-nav{
+  position:fixed;z-index:25;left:50%;bottom:12px;transform:translateX(-50%);
+  width:min(calc(100% - 24px),720px);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  padding:8px;background:rgba(255,255,255,.91);backdrop-filter:blur(20px);
+  border:1px solid rgba(221,233,238,.9);border-radius:24px;box-shadow:0 18px 46px rgba(47,88,110,.18);
+}
+.nav-btn{border:0;background:transparent;border-radius:17px;padding:8px 4px;color:#718795;font-size:9px;font-weight:750}
+.nav-btn span{display:block;font-size:18px;line-height:19px;margin-bottom:3px}
+.nav-btn.active{background:#edf6f9;color:#285f7c}
+
+.sheet-backdrop{position:fixed;inset:0;background:rgba(22,48,68,.30);z-index:50;opacity:0;pointer-events:none;transition:.22s}
+.sheet-backdrop.show{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;z-index:51;left:50%;bottom:0;transform:translate(-50%,105%);
+  width:min(100%,760px);max-height:88vh;overflow:auto;
+  background:#fff;border-radius:30px 30px 0 0;padding:10px 19px 32px;
+  box-shadow:0 -20px 70px rgba(37,77,98,.24);transition:.28s cubic-bezier(.2,.8,.2,1)
+}
+.sheet.show{transform:translate(-50%,0)}
+.handle{width:42px;height:5px;border-radius:99px;background:#d9e5ea;margin:2px auto 15px}
+.sheet-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.sheet-head .big-icon{width:54px;height:54px;border-radius:17px;background:#edf7fa;display:grid;place-items:center;font-size:24px;flex:none}
+.sheet-title{flex:1}
+.sheet-title .mini{font-size:10px;color:#618093;font-weight:800;letter-spacing:.03em}
+.sheet-title h2{margin:5px 0 0;font-size:24px;line-height:1.15;letter-spacing:-.035em}
+.close{border:0;width:34px;height:34px;border-radius:50%;background:#f1f6f8;color:#5f7888;font-size:17px}
+.sheet-desc{font-size:13px;line-height:1.75;color:#566f7f;margin:18px 0}
+.detail-grid{display:grid;grid-template-columns:1fr;gap:9px}
+.detail{
+  padding:13px 14px;border-radius:17px;background:#f7fafb;border:1px solid #e6eff2
+}
+.detail small{font-size:9px;color:#79909f;text-transform:uppercase;letter-spacing:.08em;font-weight:850}
+.detail strong{font-size:12px;display:block;margin-top:5px;line-height:1.55;color:#294b60}
+.sheet-note{font-size:10px;color:#8aa0ad;margin:14px 3px 0;line-height:1.55}
+.resource-wrap{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.resource-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;border-radius:15px;padding:12px 14px;font-size:12px;font-weight:850;text-decoration:none;border:1px solid #dbe8ed;background:#edf7fa;color:#285f7c}
+.resource-btn.web{background:#285f7c;color:#fff;border-color:#285f7c}
+.resource-hint{font-size:9.5px;color:#849aa7;line-height:1.55;padding:0 3px}
+.toast{position:fixed;z-index:80;left:50%;bottom:102px;transform:translate(-50%,20px);background:#173b50;color:#fff;border-radius:999px;padding:9px 13px;font-size:10px;font-weight:800;opacity:0;pointer-events:none;transition:.2s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+
+
+.detail-section{margin-bottom:12px}
+.detail-title{font-size:14px;font-weight:850;color:#315f75;margin:8px 0}
+.action-area{margin-top:14px}
+.resource-wrap{display:flex;flex-direction:column;gap:8px}
+.resource-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 15px;border-radius:16px;border:0;background:#285e7c;color:white;text-decoration:none;font-weight:800;font-size:13px}
+.resource-hint{font-size:11px;line-height:1.55;color:#718895;background:#f7fafb;border-radius:14px;padding:10px 12px}
+
+.footer{padding:35px 18px 10px;color:#8398a5;font-size:10px;text-align:center;line-height:1.6}
+
+@media(min-width:650px){
+  .dimension-grid{grid-template-columns:repeat(3,1fr)}
+  .dimension{min-height:175px}
+  .project-list{grid-template-columns:1fr}
+  .feature-card{flex-basis:45%}
+  .stats{padding-left:22px;padding-right:22px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.lightbeam,.star{animation:none!important}}
+
+/* V1.0.1 Lighthouse visual enhancement */
+.hero-card{
+  background:
+    radial-gradient(circle at 75% 25%, rgba(255,248,196,.8), transparent 18%),
+    linear-gradient(180deg,#dff5f9 0%,#eef9f4 55%,#f7efd9 100%);
+}
+.dimension{
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.dimension:hover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 36px rgba(61,104,128,.16);
+}
+.feature-card{
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.feature-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 36px rgba(61,104,128,.14);
+}
+.project-card{
+  transition:transform .18s ease;
+}
+.project-card:hover{
+  transform:translateY(-2px);
+}
+.section-head h2{
+  font-weight:900;
+}
+.brand-dot{
+  background:linear-gradient(145deg,#fff,#d9f2f5);
+}
+
+
+/* ===== Visual Upgrade V1.0 ===== */
+:root{
+  --ink:#17324a;
+  --muted:#6c8394;
+  --line:#dce8ef;
+  --paper:#f7fbfd;
+  --white:#fff;
+  --blue:#8bd2e5;
+  --deep:#245f7d;
+  --sea:#dff5f8;
+  --sand:#f6efda;
+  --mint:#e8f1df;
+  --rose:#f8ebe6;
+  --sun:#f7d97e;
+  --shadow:0 18px 45px rgba(46,88,112,.10);
+  --shadow-sm:0 10px 26px rgba(46,88,112,.08);
+}
+body{
+  background:
+    radial-gradient(circle at 12% 0%, rgba(169,226,235,.34), transparent 24%),
+    radial-gradient(circle at 95% 14%, rgba(250,233,194,.38), transparent 18%),
+    linear-gradient(180deg,#f7fcfe 0%,#f2f8fb 58%,#fbfdfe 100%);
+}
+.app{
+  background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.94));
+  box-shadow:0 0 70px rgba(58,97,121,.10);
+}
+.topbar{
+  padding:16px 20px 12px;
+  background:rgba(249,253,254,.88);
+  border-bottom:1px solid rgba(216,233,240,.8);
+}
+.brand-dot{
+  width:38px;height:38px;border-radius:14px;
+  background:linear-gradient(160deg,#ffffff 0%,#dcf3f6 100%);
+}
+.brand{
+  gap:12px;
+}
+.brand > div{
+  line-height:1.05;
+}
+.brand small{
+  font-size:11px;
+  letter-spacing:.09em;
+}
+.vbadge{
+  box-shadow:var(--shadow-sm);
+  border-color:#d7e6ec;
+  padding:8px 12px;
+}
+.hero{
+  padding:18px 18px 0;
+}
+.hero-card{
+  min-height:454px;
+  border-radius:36px;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(255,245,178,.8), transparent 12%),
+    radial-gradient(circle at 16% 20%, rgba(255,255,255,.75), transparent 18%),
+    linear-gradient(180deg,#dff4f8 0%,#eaf8f5 48%,#f7efd9 100%);
+  border:1px solid rgba(255,255,255,.92);
+  box-shadow:0 25px 55px rgba(48,94,117,.14);
+}
+.hero-card:before{
+  content:"";
+  position:absolute;
+  left:-32px; top:118px;
+  width:132px;height:132px;border-radius:50%;
+  background:rgba(255,255,255,.20);
+  filter:blur(6px);
+}
+.hero-copy{
+  padding:36px 28px 0;
+}
+.eyebrow{
+  background:rgba(255,255,255,.76);
+  border-color:rgba(255,255,255,.92);
+  color:#447087;
+  padding:8px 12px;
+}
+h1{
+  font-size:42px;
+  margin:16px 0 12px;
+}
+.hero-copy p{
+  max-width:455px;
+  font-size:14.5px;
+  line-height:1.7;
+}
+.hero-note{
+  display:inline-flex;
+  margin-top:16px;
+  padding:9px 12px;
+  border-radius:999px;
+  font-size:12px;
+  color:#4a7086;
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:var(--shadow-sm);
+}
+.primary{
+  margin-top:22px;
+  background:linear-gradient(180deg,#2d6c8b 0%, #245f7d 100%);
+  border-radius:18px;
+  padding:14px 18px;
+}
+.island{
+  width:206px;height:86px;
+}
+.lighthouse{
+  right:79px;bottom:90px;
+}
+.lightbeam{
+  opacity:.74;
+}
+.stats{
+  gap:12px;
+  padding:16px 18px 0;
+}
+.stat{
+  border-radius:20px;
+  padding:14px 13px;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfdfe 100%);
+}
+.stat strong{
+  font-size:22px;
+}
+section{
+  padding:30px 18px 0;
+}
+.section-head{
+  align-items:flex-end;
+  margin-bottom:16px;
+}
+.section-head h2{
+  font-size:25px;
+  letter-spacing:-.04em;
+  font-weight:900;
+}
+.section-head p{
+  font-size:12.5px;
+}
+.text-btn{
+  font-size:13px;
+}
+.dimension-grid{
+  gap:14px;
+}
+.dimension{
+  min-height:190px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.82);
+  box-shadow:0 12px 28px rgba(55,95,118,.08);
+  padding:20px;
+}
+.dimension:before{
+  content:"";
+  position:absolute;
+  right:-8px; bottom:-12px;
+  width:118px;height:118px;border-radius:50%;
+  background:rgba(255,255,255,.28);
+}
+.dimension .icon{
+  position:relative;
+  font-size:30px;
+}
+.dimension h3{
+  margin:42px 0 6px;
+  font-size:22px;
+  position:relative;
+}
+.dimension p{
+  font-size:13px;
+  position:relative;
+}
+.dimension .count{
+  right:18px;top:16px;
+  padding:8px 11px;
+  font-size:11px;
+}
+.dimension:after{
+  width:42px;height:42px;
+  right:18px;bottom:18px;
+  background:rgba(255,255,255,.70);
+  box-shadow:0 8px 20px rgba(68,105,128,.10);
+}
+.search-wrap{
+  border-radius:22px;
+  padding:14px 16px;
+  box-shadow:0 12px 26px rgba(57,95,118,.07);
+}
+.search-wrap input{
+  font-size:15px;
+}
+.quick-chips{
+  padding-top:12px;
+  gap:9px;
+}
+.chip{
+  padding:9px 13px;
+  font-size:11.5px;
+}
+.featured-scroll{
+  gap:14px;
+  padding:4px 1px 10px;
+}
+.feature-card{
+  flex:0 0 84%;
+  min-height:208px;
+  border-radius:28px;
+  padding:20px;
+  box-shadow:0 12px 28px rgba(57,95,118,.08);
+}
+.feature-card:nth-child(1){background:linear-gradient(145deg,#e6f4fb,#f8fcfb)}
+.feature-card:nth-child(2){background:linear-gradient(145deg,#eef5e1,#ffffff)}
+.feature-card:nth-child(3){background:linear-gradient(145deg,#faebe3,#fffdfd)}
+.feature-card:nth-child(4){background:linear-gradient(145deg,#efeafb,#ffffff)}
+.feature-label{
+  padding:7px 11px;
+  font-size:11px;
+}
+.feature-card h3{
+  font-size:24px;
+  margin:34px 0 8px;
+}
+.feature-card p{
+  font-size:13px;
+  -webkit-line-clamp:3;
+}
+.feature-arrow{
+  width:42px;height:42px;
+  bottom:18px; right:18px;
+}
+.explore-toolbar{
+  gap:11px;
+}
+.filter-row{
+  gap:9px;
+}
+.filter-btn{
+  padding:10px 12px;
+  font-size:11.5px;
+  border-radius:15px;
+}
+.result-meta{
+  font-size:11.5px;
+  margin:17px 2px 12px;
+}
+.project-list{
+  gap:12px;
+}
+.project-card{
+  padding:15px;
+  border-radius:23px;
+  box-shadow:0 10px 22px rgba(56,93,116,.06);
+}
+.project-icon{
+  width:54px; min-width:54px; height:54px;
+  border-radius:18px;
+  background:linear-gradient(180deg,#eef8fb 0%,#f6fbfc 100%);
+}
+.project-top{
+  gap:8px;
+  margin-bottom:6px;
+}
+.type-tag{
+  padding:4px 8px;
+  font-size:9.5px;
+}
+.project-card h3{
+  font-size:15.5px;
+  margin-bottom:5px;
+}
+.project-card p{
+  font-size:11px;
+}
+.bottom-nav{
+  width:min(calc(100% - 22px),720px);
+  bottom:12px;
+  padding:10px;
+  border-radius:28px;
+  box-shadow:0 22px 46px rgba(43,85,108,.16);
+}
+.nav-btn{
+  padding:10px 4px;
+  border-radius:19px;
+}
+.nav-btn span{
+  font-size:20px;
+}
+.nav-btn.active{
+  background:linear-gradient(180deg,#edf7fb 0%,#edf5f8 100%);
+}
+.sheet{
+  padding:12px 19px 34px;
+  border-radius:32px 32px 0 0;
+}
+.sheet-head .big-icon{
+  width:58px;height:58px;border-radius:18px;
+}
+.sheet-title h2{
+  font-size:26px;
+}
+.sheet-desc{
+  font-size:13.5px;
+}
+.detail{
+  border-radius:18px;
+  padding:14px;
+}
+.footer{
+  padding:40px 18px 12px;
+  color:#8aa0ad;
+  font-size:11px;
+}
+@media(min-width:650px){
+  .hero-card{min-height:470px}
+  .featured-scroll{padding-bottom:12px}
+  .feature-card{flex-basis:47%}
+}
+
+
+/* V1.0 Hero composition & anchor update */
+.hero-copy{
+  position:relative;
+}
+.hero-note{
+  display:flex;
+  width:fit-content;
+  margin-top:20px;
+  margin-bottom:0;
+}
+.hero-copy .primary{
+  margin-left:360px;
+  margin-top:-42px;
+  position:relative;
+  z-index:5;
+}
+@media(max-width:600px){
+  .hero-copy .primary{
+    margin-left:0;
+    margin-top:20px;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-dot">◈</div>
+      <div>RBCC HRL <small>EX DIGITAL JOURNEY</small></div>
+    </div>
+    <div class="vbadge">Release Version · 1.0</div>
+  </header>
+
+  <main>
+    <section class="hero" id="home" style="padding-top:14px">
+      <div class="hero-card">
+        <div class="hero-copy">
+          <div class="eyebrow">✦ RBCC EMPLOYEE EXPERIENCE</div>
+          <h1>Explore your<br>EX journey.</h1>
+          <p>从关心、成长到价值被看见，在这里探索与你有关的福利、活动、发展机会与员工体验。</p><div class="hero-note">Hi！今天想先看看公司为你准备了哪些体验？</div>
+          <button class="primary" onclick="goExplore()">开始探索 →</button>
+        </div>
+        <div class="hero-art">
+          <div class="lightbeam"></div>
+          <div class="star s1">✦</div><div class="star s2">✦</div><div class="star s3">✦</div>
+          <div class="island"></div>
+          <div class="lighthouse"><div class="lh-body"></div><div class="lh-top"></div><div class="lh-roof"></div></div>
+          <div class="wave a"></div><div class="wave b"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><strong id="totalCount">45</strong><span>EX EXPERIENCES</span></div>
+      <div class="stat"><strong>3</strong><span>EX DIMENSIONS</span></div>
+      <div class="stat"><strong id="categoryCount">—</strong><span>TOPICS</span></div>
+    </div>
+
+    <section>
+      <div class="section-head">
+        <div><h2>从哪里开始？</h2><p>Choose your experience</p></div>
+      </div>
+      <div class="dimension-grid">
+        <button class="dimension care" onclick="selectDimension('我被关心')">
+          <div class="icon">♥</div><div class="count" id="careCount">29 项</div>
+          <h3>我被关心</h3><p>Wellbeing · Benefits · Life</p>
+        </button>
+        <button class="dimension grow" onclick="selectDimension('我在成长')">
+          <div class="icon">↗</div><div class="count" id="growCount">10 项</div>
+          <h3>我在成长</h3><p>Learning · Career · Growth</p>
+        </button>
+        <button class="dimension shine" onclick="selectDimension('我的价值被看见')">
+          <div class="icon">✦</div><div class="count" id="shineCount">6 项</div>
+          <h3>我的价值被看见</h3><p>Recognition · Achievement · Impact</p>
+        </button>
+      </div>
+    </section>
+
+    <section id="searchSection">
+      <div class="section-head">
+        <div><h2>你在找什么？</h2><p>Search benefits, programs & facilities</p></div>
+      </div>
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input id="searchInput" type="search" placeholder="试试“体检”“Mentoring”“福利”…" oninput="applyFilters()" />
+      </div>
+      <div class="quick-chips" id="quickChips"></div>
+    </section>
+
+    <section id="highlights">
+      <div class="section-head">
+        <div><h2>Featured Experiences</h2><p>精选员工体验</p></div>
+        <button class="text-btn" onclick="showFeatured()">浏览重点</button>
+      </div>
+      <div class="featured-scroll" id="featured"></div>
+    </section>
+<section id="explore">
+      <div class="section-head">
+        <div><h2>Explore EX</h2><p>浏览全部员工体验</p></div>
+      </div>
+      <div class="explore-toolbar">
+        <div class="filter-row" id="dimensionFilters"></div>
+        <div class="filter-row" id="typeFilters"></div>
+      </div>
+      <div class="result-meta"><span id="resultCount">45 项体验</span><span id="activeLabel">全部</span></div>
+      <div class="project-list" id="projectList"></div>
+    </section>
+
+    <div class="footer">
+      RBCC Employee Experience<br>Discover experiences designed for you.
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav bottom-nav-3">
+  <button class="nav-btn active" onclick="navTo('home',this)"><span>⌂</span>首页</button>
+  <button class="nav-btn" onclick="navTo('searchSection',this)"><span>◈</span>探索</button>
+  <button class="nav-btn" onclick="navTo('explore',this)"><span>☰</span>分类</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<div class="sheet-backdrop" id="backdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="handle"></div>
+  <div id="sheetContent"></div>
+</div>
+
+<script>
+const PROJECTS = [{"id":1,"dimension":"我被关心","category":"假日关怀","type":"政策","title":"福利年假","description":"除国家法定年假之外，公司根据员工职级和服务年限额外给予福利年假：员工入职即享至少10天年假总额（含法定），后续随司龄逐年增加，最多不超过25个工作日。","audience":"全体正式员工","time":"全年可申请，最小使用单位为0.5小时；当年度未使用完的年假可顺延至下一年度，但必须在次年3月31日前休完。","owner":"HR","featured":false,"sourceLabel":"考勤与休假管理政策","sourceTarget":"../../../../../../../RBCC_Public/RBCC_Procedures_And_Regulations/12_HRL/2.%20Approved/Management%20documents/RBCC-MD-HRL-001_Attendance%20&%20Leave%20Policy_ENCN_考勤与休假管理政策","sourceKind":"network","shortDescription":"除法定年假外，公司还根据职级与司龄提供额外福利年假，支持更灵活地安排休息时间。","calendarMonths":[],"calendarOngoing":true},{"id":2,"dimension":"我被关心","category":"健康关怀","type":"政策","title":"企业福利计划（CBS）","description":"CBS是博世中国推出的一项福利计划，由补充养老金计划和储蓄计划组成，为员工提供长期财务保障。","audience":"全体正式员工","time":"入职即可享受","owner":"HR","featured":false,"sourceLabel":"CBS手册","sourceTarget":"file:///\\\\bosch.com\\dfsrb\\DfsCN\\LOC\\CNG\\RBCC_Public\\Infocenter\\65_HRL\\01_Information_sharing\\0106_CBS","sourceKind":"network","shortDescription":"由补充养老金与储蓄计划组成，为正式员工提供长期财务保障。","calendarMonths":[],"calendarOngoing":false},{"id":3,"dimension":"我被关心","category":"健康关怀","type":"政策","title":"团体商业保险","description":"公司为员工及其未成年子女投保了商业保险","audience":"全体正式员工","time":"入职即可享受","owner":"HR","featured":false,"sourceLabel":"商业保险","sourceTarget":"file:///\\\\bosch.com\\dfsrb\\DfsCN\\LOC\\CNG\\RBCC_Public\\Infocenter\\65_HRL\\01_Information_sharing\\0107_Commercial_Insurance","sourceKind":"network","shortDescription":"公司为员工及其未成年子女提供团体商业保险保障。","calendarMonths":[],"calendarOngoing":false},{"id":4,"dimension":"我被关心","category":"健康关怀","type":"活动","title":"EAP员工辅助计划","description":"EAP通过专业心理人士对组织及员工进行诊断和建议，提供专业指导、培训和咨询服务，帮助员工及家庭成员解决心理和行为困扰，提升员工幸福感","audience":"全体员工","time":"驻场咨询：每月一天（根据HSE邮件）\n24小时热线咨询：400-619-1990\n智慧心理平台","owner":"HSE","featured":false,"shortDescription":"通过专业心理咨询、指导与支持，帮助员工及家庭成员应对心理与生活困扰。","calendarMonths":[],"calendarOngoing":true},{"id":5,"dimension":"我被关心","category":"健康关怀","type":"设施","title":"健身房（足球场）","description":"有氧运动区 / 力量训练区 / 功能性训练区 / 瑜伽&拉伸区 / 乒乓球区域","audience":"全体员工","time":"全天开放（非个人上班时间）","owner":"Labor Union","featured":false,"shortDescription":"提供有氧、力量、功能训练、瑜伽拉伸及乒乓球等运动空间。","calendarMonths":[],"calendarOngoing":true},{"id":6,"dimension":"我被关心","category":"健康关怀","type":"政策","title":"长沙市职工医疗互助","description":"工会为正式员工提供额外保险保障，完善员工福利体系。","audience":"全体正式员工","time":"根据项目安排","owner":"Labor Union","featured":false,"shortDescription":"工会为正式员工提供额外医疗互助保障，补充现有福利体系。","calendarMonths":[],"calendarOngoing":false},{"id":7,"dimension":"我被关心","category":"健康关怀","type":"设施","title":"女性关爱：哺乳室","description":"哺乳室内配备冰箱、微波炉、消毒柜等必要设施，为哺乳期女员工提供私密、舒适的场所。","audience":"全体女员工","time":"全天开放","owner":"Labor Union","featured":false,"shortDescription":"哺乳室内配备冰箱、微波炉、消毒柜等必要设施，为哺乳期女员工提供私密、舒适的场所。","calendarMonths":[],"calendarOngoing":false},{"id":8,"dimension":"我被关心","category":"健康关怀","type":"政策","title":"女性关爱：卫生津贴","description":"关心女性员工健康，每月提供卫生津贴支持（30元/月）。","audience":"全体正式女性员工","time":"随每月工资发放","owner":"HR","featured":false,"sourceLabel":"薪酬福利管理办法","sourceTarget":"../../../../../../../RBCC_Public/RBCC_Procedures_And_Regulations/12_HRL/2.%20Approved/Management%20documents/RBCC-MD-HRL-021_RBCC%20Training%20Management_ENCN_培训管理","sourceKind":"network","shortDescription":"关心女性员工健康，每月提供卫生津贴支持（30元/月）。","calendarMonths":[],"calendarOngoing":false},{"id":9,"dimension":"我被关心","category":"健康关怀","type":"设施","title":"医务室","description":"简单疾病的处理（感冒、发热、咳嗽等）\n外伤的包扎处置\n血糖、血尿酸、血压等测量","audience":"全体员工","time":"全天开放（工作时间）","owner":"HSE","featured":false,"shortDescription":"简单疾病的处理（感冒、发热、咳嗽等），外伤的包扎处置。","calendarMonths":[],"calendarOngoing":true},{"id":10,"dimension":"我被关心","category":"健康关怀","type":"设施","title":"健康小屋","description":"为关爱员工身心健康，提供年度体检项目以外的补充检测：骨密度检测仪 / 肺功能检测仪 / 心理测试仪 / 人体成分分析仪 / 动脉硬化检测仪 / 心血管功能测试诊断仪","audience":"全体员工","time":"每周四","owner":"HSE","featured":false,"shortDescription":"为关爱员工身心健康，提供年度体检项目以外的补充检测：骨密度检测仪 / 肺功能检测仪 / 心理测试仪 / 人体成分分析…","calendarMonths":[],"calendarOngoing":true},{"id":11,"dimension":"我被关心","category":"健康关怀","type":"活动","title":"年度健康体检","description":"公司每年为员工安排免费年度体检，提供固定套餐及基础套餐+个性化自选项目，不同年龄层次提供不同预算标准。","audience":"全体正式员工（不包含当年度入职员工）","time":"每年7-8月","owner":"HR","featured":true,"featureReason":"近期 · 广覆盖","shortDescription":"每年为符合条件的员工安排免费健康体检，并提供不同年龄层次的体检方案。","calendarMonths":[7,8],"calendarOngoing":false,"featureOrder":2},{"id":12,"dimension":"我被关心","category":"温情关怀","type":"政策","title":"工会慰问金：婚嫁/生子/丧亲/员工住院","description":"员工在婚嫁、生子、丧亲等重要人生节点，公司提供相应的慰问关怀。","audience":"全体正式员工","time":"根据项目安排","owner":"Labor Union","featured":false,"shortDescription":"在婚嫁、生子、丧亲、住院等重要人生节点，为员工提供工会慰问与关怀。","calendarMonths":[],"calendarOngoing":false},{"id":13,"dimension":"我被关心","category":"节日与个性化福利","type":"活动","title":"妇女节活动/半天假期","description":"若3月8日为工作日，所有在职女员工可享受0.5天带薪假期；工会会发放妇女节专属礼包（实习生可享受）并组织妇女节主题团建活动","audience":"全体正式女性员工","time":"3月8日","owner":"Labor Union","featured":false,"shortDescription":"在妇女节为在职女员工提供半天带薪假期，并开展节日礼包与主题活动。","calendarMonths":[3],"calendarOngoing":false},{"id":14,"dimension":"我被关心","category":"节日与个性化福利","type":"活动","title":"高温送清凉","description":"夏季高温期间为蓝领员工提供清凉慰问，体现公司对一线员工的关怀。\n食堂提供凉茶\n医务室领取藿香正气水等防暑药品","audience":"蓝领员工","time":"7-9月","owner":"Labor Union","featured":false,"shortDescription":"夏季高温期间为一线蓝领员工提供凉茶、防暑用品等清凉关怀。","calendarMonths":[7,8,9],"calendarOngoing":false},{"id":15,"dimension":"我被关心","category":"节日与个性化福利","type":"政策","title":"春节/端午节/中秋节福利物资","description":"重要传统节日为员工发放节日福利物资，营造节日氛围。","audience":"全体正式员工","time":"根据项目安排","owner":"Labor Union","featured":false,"shortDescription":"重要传统节日为员工发放节日福利物资，营造节日氛围。","calendarMonths":[],"calendarOngoing":false},{"id":16,"dimension":"我被关心","category":"节日与个性化福利","type":"活动","title":"生日祝福","description":"通过生日祝福邮件和蛋糕卡券等形式，为员工送上生日祝福。","audience":"全体正式员工","time":"根据项目安排","owner":"Labor Union","featured":false,"shortDescription":"通过生日祝福邮件和蛋糕卡券等形式，为员工送上生日祝福。","calendarMonths":[],"calendarOngoing":false},{"id":17,"dimension":"我被关心","category":"节日与个性化福利","type":"活动","title":"入职周年纪念","description":"发送入职周年祝福邮件（Bosch China HR）\n入职满5年/10年/15年/20年/25年可获得长期服务年限奖","audience":"全体正式员工","time":"全年","owner":"HR","featured":false,"shortDescription":"通过周年祝福与长期服务年限奖，纪念员工与公司共同成长的重要节点。","calendarMonths":[],"calendarOngoing":true},{"id":18,"dimension":"我的价值被看见","category":"荣誉认可","type":"活动","title":"公司层级：优秀员工/优秀团队\n部门层级：及时认可奖","description":"公司层级评选年度优秀员工和优秀团队；部门层级设立及时认可奖，激励员工表现。","audience":"全体正式员工","time":"12月","owner":"HR","featured":false,"shortDescription":"通过年度优秀员工/团队与部门及时认可，让优秀表现被看见、被肯定。","calendarMonths":[12],"calendarOngoing":false},{"id":19,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"年度旅游","description":"组织全体正式员工参与年度旅游活动，增进团队凝聚力。","audience":"全体正式员工","time":"根据项目安排","owner":"HR","featured":false,"shortDescription":"由部门组织年度员工旅游活动，增进团队连接与凝聚力。","calendarMonths":[],"calendarOngoing":false},{"id":20,"dimension":"我在成长","category":"员工发展","type":"政策","title":"教育资助","description":"为员工提供教育资助，支持员工提升教育水平，帮助员工提升工作相关技能，满足业务发展需求，为未来职业挑战做好准备；支持人才在管理、项目或专业领域发展；吸引、激励并留住优秀人才。","audience":"全体正式员工（G7及以上）","time":"入职公司2-3年后，符合特定的条件可申请","owner":"HR","featured":false,"sourceLabel":"教育资助计划","sourceTarget":"../../../../../../../RBCC_Public/RBCC_Procedures_And_Regulations/12_HRL/2.%20Approved/Management%20documents/RBCC-MD-HRL-004_Education%20Assistance%20Program_ENCN_教育资助计划","sourceKind":"network","shortDescription":"为符合条件的员工提供教育资助，支持学历提升、专业发展与职业成长。","calendarMonths":[],"calendarOngoing":false},{"id":21,"dimension":"我被关心","category":"温情关怀","type":"政策","title":"财务资助","description":"在员工遇到特殊困难时提供财务资助，缓解员工短期财务压力体现公司关怀。","audience":"全体正式员工（G6及以上）","time":"符合条件可申请","owner":"HR","featured":false,"sourceLabel":"财务资助办法","sourceTarget":"../../../../../../../RBCC_Public/RBCC_Procedures_And_Regulations/12_HRL/2.%20Approved/Management%20documents/RBCC-MD-HRL-206_Finacial%20Loan%20Policy_ENCN_财务资助办法","sourceKind":"network","shortDescription":"在符合条件的特殊困难场景下，为员工提供短期财务支持。","calendarMonths":[],"calendarOngoing":false},{"id":22,"dimension":"我被关心","category":"温情关怀","type":"政策","title":"班车/交通补贴","description":"为员工提供班车服务或交通补贴，解决通勤问题。","audience":"全体正式员工","time":"根据项目安排","owner":"FCM","featured":false,"sourceLabel":"RBCC班车管理规定","sourceTarget":"../../../../../../../RBCC_Public/RBCC_Procedures_And_Regulations/01_FCM/2.%20Approved/RBCC-MD-FCM-035_RBCC%20Shuttle%20Bus%20Administrative%20Regulation","sourceKind":"network","shortDescription":"通过班车服务或交通补贴，为员工提供通勤支持。","calendarMonths":[],"calendarOngoing":false},{"id":23,"dimension":"我在成长","category":"人才吸引","type":"活动","title":"Talent Magnet - 老友会","description":"邀请老员工“回家”，通过茶话会交流等环节，增进情感连接与归属感。","audience":"历届离职员工","time":"根据项目安排","owner":"PAC","featured":false,"shortDescription":"邀请老员工“回家”，通过茶话会交流等环节，增进情感连接与归属感。","calendarMonths":[],"calendarOngoing":false},{"id":24,"dimension":"我在成长","category":"人才吸引","type":"活动","title":"Talent Magnet - 实习生菁英沙龙","description":"面向在职及已离职实习生的职业发展沙龙，通过前辈经验分享与互动交流，持续维系青年人才关系，打造优质雇主品牌，吸引优秀青年人才关注与回流。","audience":"在职实习生&历届离职实习生","time":"根据项目安排","owner":"PAC","featured":false,"shortDescription":"面向在职及已离职实习生的职业发展沙龙，通过前辈经验分享与互动交流，持续维系青年人才关系，打造优质雇主品牌，吸引优秀青…","calendarMonths":[],"calendarOngoing":false},{"id":25,"dimension":"我在成长","category":"员工发展","type":"活动","title":"Onboarding Training (入职培训/HR Tools 培训)","description":"蓝领：入职当天半天培训并测试\n白领：入职当周邮件发送新员工入职培训清单，包含线上和线下两种培训形式\nTrainee培训内容与白领员工一致","audience":"全体正式员工","time":"依据具体不同培训计划完成时间","owner":"HR","featured":false,"sourceLabel":"新员工培训安排和材料","sourceTarget":"file:///\\\\bosch.com\\dfsrb\\DfsCN\\LOC\\CNG\\RBCC_Public\\Infocenter\\65_HRL\\01_Information_sharing\\0110_Training%20related\\07_Training%20materials\\General%20training\\training%20material_Orientation","sourceKind":"network","shortDescription":"面向新员工提供入职与 HR Tools 培训，帮助快速了解公司、流程和工作工具。","calendarMonths":[],"calendarOngoing":false},{"id":26,"dimension":"我在成长","category":"员工发展","type":"项目","title":"RBCC Growth University","description":"成长大学是在现有培训体系基础上，立足已有资源与经验，通过“学院制”模式整合重构，打造一个让学习更贴近业务、资源更灵活共享、专业影响力更被看见的赋能平台。\n运作方式：年初收集全员CptM数据 → 按业务领域识别关键能力缺口 → 分发至对应学院 → 各学院规划并落地能力建设方案 → 年底评估成效，形成闭环","audience":"全体正式员工","time":"根据需求组织开展","owner":"HR","featured":true,"sourceLabel":"相关详细信息","sourceTarget":"file:///\\\\bosch.com\\dfsrb\\DfsCN\\LOC\\CNG\\RBCC_Public\\Infocenter\\65_HRL\\01_Information_sharing\\0110_Training%20related\\10_Others\\RBCC%20Groeth%20Univercity","sourceKind":"network","featureReason":"年度成长平台","shortDescription":"整合内部学习资源与业务能力建设需求，打造更贴近业务的成长与赋能平台。","calendarMonths":[],"calendarOngoing":false,"featureOrder":3},{"id":27,"dimension":"我在成长","category":"员工发展","type":"政策","title":"Mentoring 导师制","description":"为公司有较强职业发展意愿和潜力的员工搭建平台，促进经验传承和快速成长\n员工和领导可以通过不同形式谈话沟通中定义需求和计划","audience":"公司间接/白领员工","time":"全年基于需求","owner":"HR","featured":true,"sourceLabel":"导师项目介绍和操作细则","sourceTarget":"https://connect.bosch.com/wikis/home?lang=en-us","sourceKind":"web","featureReason":"全年可行动","shortDescription":"通过导师交流与经验传承，为有职业发展意愿的员工提供成长支持。","calendarMonths":[],"calendarOngoing":true,"featureOrder":4},{"id":28,"dimension":"我在成长","category":"员工发展","type":"政策","title":"Slash 斜杠/跨界","description":"在本岗位上提供机会拓宽职业边际支持多元成长\n员工和部门都可以提出需求给到HR进行协调","audience":"公司间接/白领员工","time":"全年基于需求","owner":"HR","featured":false,"sourceLabel":"斜杠/跨界介绍和操作细则","sourceTarget":"https://connect.bosch.com/wikis/home?lang=en-us","sourceKind":"web","shortDescription":"在本岗位之外拓展跨职能或跨领域实践机会，支持多元职业成长。","calendarMonths":[],"calendarOngoing":true},{"id":29,"dimension":"我在成长","category":"员工发展","type":"政策","title":"Job Rotation 轮岗","description":"基于业务发展需要或个人职业岗位需求，员工可以申请有空缺岗位的跨团队，跨部门，跨博世公司等多种形式的转岗/轮岗；","audience":"全体正式员工","time":"全年基于个人或组织需要","owner":"HR","featured":false,"sourceLabel":"轮岗形式类别","sourceTarget":"https://connect.bosch.com/wikis/home?lang=en-us","sourceKind":"web","shortDescription":"基于业务与个人发展需要，提供跨团队、跨部门及跨公司轮岗机会。","calendarMonths":[],"calendarOngoing":true},{"id":30,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"Fancy Kids 亲子体验活动","description":"组织员工及子女参与亲子活动，增进家庭与公司的连接。","audience":"全体正式员工","time":"根据项目安排","owner":"相关部门","featured":false,"shortDescription":"组织员工及子女参与亲子活动，增进家庭与公司的连接。","calendarMonths":[],"calendarOngoing":false},{"id":31,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"Employee Day 员工日/活动","description":"举办员工日主题活动，增强员工归属感和团队凝聚力。","audience":"全体正式员工","time":"根据项目安排","owner":"相关部门","featured":false,"shortDescription":"举办员工日主题活动，增强员工归属感和团队凝聚力。","calendarMonths":[],"calendarOngoing":false},{"id":32,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"People Week","description":"面向全体员工打造的年度主题活动，于每年9月集中开展，由HR部门统筹策划。活动主题围绕职业发展、文化连接等多元维度，以丰富有趣的互动形式展开，在彼此连接中增强归属感，在共同成长中深化组织认同。","audience":"全体正式员工","time":"每年9月","owner":"HR","featured":true,"featureReason":"EX 年度旗舰","shortDescription":"每年 9 月集中开展的年度员工体验主题活动，连接职业发展、文化与员工互动。","calendarMonths":[9],"calendarOngoing":false,"featureOrder":1},{"id":33,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"食堂美食节","description":"在食堂举办美食节活动，丰富员工的用餐体验。","audience":"全体正式员工","time":"不定期，每年1-2次","owner":"FCM","featured":false,"shortDescription":"在食堂举办美食节活动，丰富员工的用餐体验。","calendarMonths":[],"calendarOngoing":false},{"id":34,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"工会文体协会","description":"工会组织各类文体协会，丰富员工业余文化生活。","audience":"全体正式员工","time":"根据项目安排","owner":"Labor Union","featured":false,"shortDescription":"通过多类型文体协会丰富员工业余生活，连接兴趣与同事社群。","calendarMonths":[],"calendarOngoing":false},{"id":35,"dimension":"我在成长","category":"员工发展","type":"活动","title":"QMM质量周","description":"开展质量主题活动，提升全员质量意识。","audience":"全体正式员工","time":"每年9月","owner":"QMM","featured":false,"shortDescription":"通过质量主题活动提升全员质量意识与实践参与度。","calendarMonths":[9],"calendarOngoing":false},{"id":36,"dimension":"我在成长","category":"员工发展","type":"活动","title":"Security Month 安全月","description":"开展安全主题活动，强化全员安全意识。\n礼品发放，各种活动惊喜…","audience":"全体员工","time":"每年6月","owner":"HSE","featured":false,"shortDescription":"通过安全主题活动与互动体验，持续强化全员安全意识。","calendarMonths":[6],"calendarOngoing":false},{"id":37,"dimension":"我被关心","category":"节日与个性化福利","type":"活动","title":"工会活动经费","description":"分工会/部门自行组织员工共活动","audience":"全体正式员工","time":"根据项目安排","owner":"Labor Union","featured":false,"shortDescription":"分工会/部门自行组织员工共活动。","calendarMonths":[],"calendarOngoing":false},{"id":38,"dimension":"我被关心","category":"温情关怀","type":"活动","title":"安全屋","description":"急救&安全知识学习和体验","audience":"全体员工","time":"部门集中培训","owner":"HSE","featured":false,"shortDescription":"通过急救与安全知识学习、体验和培训，提升员工安全应对能力。","calendarMonths":[],"calendarOngoing":false},{"id":39,"dimension":"我被关心","category":"健康关怀","type":"设施","title":"AED及急救箱配置","description":"全公司范围共设置4台AED自动体外除颤器，并在各大办公区域配备急救箱，用于突发意外伤害的紧急处置。","audience":"全体员工","time":"7×24小时紧急备用","owner":"HSE","featured":false,"shortDescription":"在公司主要区域配置 AED 与急救箱，为突发情况提供应急支持。","calendarMonths":[],"calendarOngoing":false},{"id":40,"dimension":"我被关心","category":"健康关怀","type":"设施","title":"食堂健康自测角","description":"在食堂区域设置体重秤、血压计，供员工日常健康监测；同时配发健康宣传报刊（手册），普及健康知识。","audience":"全体员工","time":"食堂开放时间（工作日）","owner":"HSE","featured":false,"shortDescription":"在食堂提供体重、血压等自测设备及健康知识资料，方便日常健康管理。","calendarMonths":[],"calendarOngoing":true},{"id":41,"dimension":"我的价值被看见","category":"荣誉认可","type":"政策","title":"政府人才评审","description":"对接省/市/区级人才评审项目，由公司择优推荐核心员工参与评定。获评后可享受政府提供的各类人才政策（如住房、子女教育、医疗等），提升员工荣誉感与归属感。","audience":"核心技术/管理骨干、高潜力人才（具体视各政策要求而定）","time":"依据各级政府申报通知（通常为年度或季度）","owner":"HR","featured":false,"shortDescription":"择优推荐核心人才参与各级政府人才项目评审，争取人才政策与荣誉支持。","calendarMonths":[],"calendarOngoing":false},{"id":42,"dimension":"我的价值被看见","category":"荣誉认可","type":"活动","title":"文化之星评选\n(BBM China)","description":"从优秀实践中评选高绩效文化榜样人物，通过真实故事传播优秀文化，带动更多员工共同成长。获奖者可获得奖金、获奖Letter、文化纪念礼品，案例入选BBM中国文化案例库，受邀参加年度颁奖典礼。","audience":"全体员工（通过HPC Best-case推荐）","time":"每年两次","owner":"COM","featured":false,"shortDescription":"从优秀实践中评选文化榜样，通过真实故事传播高绩效文化。","calendarMonths":[],"calendarOngoing":false},{"id":43,"dimension":"我的价值被看见","category":"员工发展","type":"项目","title":"专家认证","description":"通过专家发展项目认证具备扎实专业能力、为业务带来切实价值的专家。获认证专家将获得专家津贴，并作为公司推动创新与业务突破的核心力量，参与攻克复杂挑战、沉淀分享专业知识、支撑关键战略落地。","audience":"各领域专业人才","time":"每年一次","owner":"HR","featured":false,"shortDescription":"通过专家发展项目认证专业能力与业务贡献，支持专业人才持续发展。","calendarMonths":[],"calendarOngoing":false},{"id":44,"dimension":"我的价值被看见","category":"员工发展","type":"活动","title":"高潜人才曝光","description":"组织一系列不同形式的高潜人才与管理层的交流沟通，以及公司内，跨部门/跨职能的经验分享等活动。","audience":"TPx\nYoung Talents\nFemale Talents","time":"不定期开展","owner":"HR","featured":false,"shortDescription":"通过管理层交流、跨团队分享等方式，为高潜人才创造更多展示与连接机会。","calendarMonths":[],"calendarOngoing":false},{"id":45,"dimension":"我的价值被看见","category":"荣誉认可","type":"活动","title":"高光时刻-优秀事迹宣传","description":"通过公司内刊《博世觉》及公司微信公众号等平台，刊登员工个人或团队的优秀事迹、最佳实践案例及文化故事，让榜样被看见，让优秀文化广泛传播。","audience":"全体员工","time":"长期持续（内刊按季度刊发，公众号不定期发布）","owner":"COM","featured":false,"shortDescription":"通过内刊和公众号传播员工与团队的优秀实践，让榜样与好故事被更多人看见。","calendarMonths":[],"calendarOngoing":true}];
+
+const state = { dimension:'全部', type:'全部', category:'全部', query:'', featuredOnly:false };
+
+const SEARCH_ALIASES = {
+  '看病':['医务室','医疗','商业保险','健康小屋','EAP'],
+  '心理':['EAP','心理','健康小屋'],
+  '生孩子':['生子','哺乳室','商业保险','慰问金'],
+  '休假':['年假','妇女节','假期'],
+  '通勤':['班车','交通补贴'],
+  '学习':['Growth University','教育资助','培训','Mentoring','专家认证'],
+  '成长':['Growth University','Mentoring','Slash','Job Rotation','专家认证','高潜'],
+  '升职':['Mentoring','Job Rotation','高潜','专家认证','人才'],
+  '新人':['Onboarding','入职培训','入职周年'],
+  '运动':['健身房','足球场','文体协会'],
+  '奖励':['优秀员工','认可','文化之星','高光时刻','专家认证'],
+  '福利':['年假','CBS','商业保险','节日','生日','慰问','体检','班车']
+};
+const dimensionMap = {
+  '我被关心': {icon:'♥', cls:'care'},
+  '我在成长': {icon:'↗', cls:'grow'},
+  '我的价值被看见': {icon:'✦', cls:'shine'}
+};
+const typeIcon = {'政策':'▣','活动':'✦','设施':'⌂','项目':'◆'};
+const categoryIcon = {
+  '健康关怀':'♥','温情关怀':'☀','节日与个性化福利':'🎁','假日关怀':'☕',
+  '员工发展':'↗','人才吸引':'◎','荣誉认可':'✦'
+};
+
+function esc(s=''){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+function shortText(s,n=64){ s=String(s||'').replace(/\n/g,' '); return s.length>n ? s.slice(0,n)+'…' : s; }
+
+function init(){
+  document.getElementById('totalCount').textContent = PROJECTS.length;
+  const cats=[...new Set(PROJECTS.map(p=>p.category))];
+  document.getElementById('categoryCount').textContent=cats.length;
+  ['我被关心','我在成长','我的价值被看见'].forEach((d,i)=>{
+    const id=['careCount','growCount','shineCount'][i];
+    document.getElementById(id).textContent=PROJECTS.filter(p=>p.dimension===d).length+' 项';
+  });
+  renderQuickChips();
+  renderFeatured();
+  renderFilters();
+  renderProjects();
+}
+
+function renderQuickChips(){
+  const preferred=['健康关怀','温情关怀','员工发展','荣誉认可','节日与个性化福利'];
+  document.getElementById('quickChips').innerHTML = preferred.map(c =>
+    `<button class="chip ${state.category===c?'active':''}" onclick="toggleCategory('${esc(c)}')">${categoryIcon[c]||'◦'} ${esc(c)}</button>`
+  ).join('');
+}
+function renderFeatured(){
+  const featured=PROJECTS.filter(p=>p.featured).sort((a,b)=>(a.featureOrder||99)-(b.featureOrder||99));
+  document.getElementById('featured').innerHTML = featured.map(p=>`
+    <article class="feature-card" onclick="openProject(${p.id})">
+      <span class="feature-label">${esc(p.featureReason || '年度重点')}</span>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.shortDescription || shortText(p.description,88))}</p>
+      <div style="margin-top:12px;font-size:10px;color:#6f8795;font-weight:800">${esc(p.dimension)} · ${esc(p.type)}</div>
+      <button class="feature-arrow" aria-label="查看详情">→</button>
+    </article>`).join('');
+}
+function renderFilters(){
+  const dims=['全部','我被关心','我在成长','我的价值被看见'];
+  const types=['全部','活动','政策','项目','设施'];
+  document.getElementById('dimensionFilters').innerHTML=dims.map(d =>
+    `<button class="filter-btn ${state.dimension===d?'active':''}" onclick="setDimension('${d}')">${d}</button>`).join('');
+  document.getElementById('typeFilters').innerHTML=types.map(t =>
+    `<button class="filter-btn ${state.type===t?'active':''}" onclick="setType('${t}')">${t}</button>`).join('');
+}
+function filtered(){
+  const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
+  state.query=q;
+  let aliasTerms=[];
+  if(q){
+    Object.entries(SEARCH_ALIASES).forEach(([key,terms])=>{
+      if(q.includes(key) || key.includes(q)) aliasTerms.push(...terms);
+    });
+  }
+  aliasTerms=aliasTerms.map(x=>String(x).toLowerCase());
+  return PROJECTS.filter(p=>{
+    if(state.featuredOnly && !p.featured) return false;
+    if(state.dimension!=='全部' && p.dimension!==state.dimension) return false;
+    if(state.type!=='全部' && p.type!==state.type) return false;
+    if(state.category!=='全部' && p.category!==state.category) return false;
+    if(q){
+      const hay=[p.title,p.shortDescription,p.description,p.category,p.dimension,p.type,p.audience,p.owner].join(' ').toLowerCase();
+      const direct=hay.includes(q);
+      const alias=aliasTerms.some(k=>hay.includes(k));
+      if(!direct && !alias) return false;
+    }
+    return true;
+  });
+}
+function renderProjects(){
+  const arr=filtered();
+  document.getElementById('resultCount').textContent=arr.length+' 项体验';
+  const labels=[];
+  if(state.featuredOnly) labels.push('Highlights');
+  if(state.dimension!=='全部') labels.push(state.dimension);
+  if(state.category!=='全部') labels.push(state.category);
+  if(state.type!=='全部') labels.push(state.type);
+  document.getElementById('activeLabel').textContent=labels.length?labels.join(' · '):'全部';
+  const el=document.getElementById('projectList');
+  if(!arr.length){ el.innerHTML='<div class="empty">没有找到匹配的项目，换一个关键词试试看。</div>'; return; }
+  el.innerHTML=arr.map(p=>`
+    <button class="project-card" onclick="openProject(${p.id})">
+      <div class="project-icon">${categoryIcon[p.category]||typeIcon[p.type]||'◦'}</div>
+      <div class="project-main">
+        <div class="project-top"><span class="type-tag">${esc(p.type)}</span><span class="type-tag">${esc(p.category)}</span></div>
+        <h3>${esc(p.title)}</h3>
+        <p>${esc(p.shortDescription || shortText(p.description))}</p>
+      </div>
+      <div class="project-side">›</div>
+    </button>`).join('');
+}
+
+
+function applyFilters(){ state.featuredOnly=false; renderProjects(); }
+function setDimension(d){ state.dimension=d; state.featuredOnly=false; renderFilters(); renderProjects(); }
+function setType(t){ state.type=t; state.featuredOnly=false; renderFilters(); renderProjects(); }
+function toggleCategory(c){
+  state.category = state.category===c ? '全部' : c;
+  state.featuredOnly=false; renderQuickChips(); renderProjects();
+  document.getElementById('explore').scrollIntoView({behavior:'smooth'});
+}
+function selectDimension(d){
+  state.dimension=d; state.type='全部'; state.category='全部'; state.featuredOnly=false;
+  renderFilters();renderQuickChips();renderProjects();
+  document.getElementById('explore').scrollIntoView({behavior:'smooth'});
+}
+function goExplore(){ document.getElementById('searchSection').scrollIntoView({behavior:'smooth'}); }
+function showFeatured(){
+  state.featuredOnly=true;state.dimension='全部';state.type='全部';state.category='全部';
+  renderFilters();renderQuickChips();renderProjects();
+  document.getElementById('explore').scrollIntoView({behavior:'smooth'});
+}
+function resetAll(btn){
+  state.dimension='全部';state.type='全部';state.category='全部';state.featuredOnly=false;
+  document.getElementById('searchInput').value='';
+  renderFilters();renderQuickChips();renderProjects();
+  navTo('explore',btn);
+}
+function navTo(id,btn){
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+function resourceHTML(p){
+  if(!p.sourceTarget) return '';
+  if(p.sourceKind==='web'){
+    return `<div class="resource-wrap"><a class="resource-btn web" href="${esc(p.sourceTarget)}" target="_blank" rel="noopener">📄 ${esc(p.sourceLabel || '查看资料')} ↗</a></div>`;
+  }
+  const raw=String(p.sourceTarget||'');
+  const isRelative=raw.startsWith('../') || raw.startsWith('..\\');
+  if(isRelative){
+    return `<div class="resource-wrap"></div>`;
+  }
+  return `<div class="resource-wrap"><button class="resource-btn" onclick="copySourcePath(${p.id})">📁 复制公盘路径</button></div>`;
+}
+
+function safeResourceHTML(p){
+  try{
+    if(typeof resourceHTML === 'function') return resourceHTML(p);
+  }catch(e){}
+  return '';
+}
+
+function openProject(id){
+
+  const p=PROJECTS.find(x=>x.id===id); if(!p) return;
+  document.getElementById('sheetContent').innerHTML=`
+    <div class="sheet-head">
+      <div class="big-icon">${categoryIcon[p.category]||typeIcon[p.type]||'◦'}</div>
+      <div class="sheet-title"><div class="mini">${esc(p.dimension)} · ${esc(p.category)} · ${esc(p.type)}</div><h2>${esc(p.title)}</h2></div>
+      <button class="close" onclick="closeSheet()">×</button>
+    </div>
+    <div class="sheet-desc">${esc(p.description).replace(/\n/g,'<br>')}</div>
+    <div class="detail-grid">
+      <div class="detail"><small>适用对象</small><strong>${esc(p.audience)}</strong></div>
+      <div class="detail"><small>参与时间</small><strong>${esc(p.time)}</strong></div>
+      <div class="detail"><small>联系我们</small><strong>${esc(p.owner)}</strong></div>
+    </div>
+    ${safeResourceHTML(p)}
+    <div class="sheet-note">更多信息与相关资料将在后续版本持续更新。</div>`;
+  document.getElementById('backdrop').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(window.__toastTimer); window.__toastTimer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+function copySourcePath(id){
+  const p=PROJECTS.find(x=>x.id===id); if(!p || !p.sourceTarget) return;
+  let value=decodeURIComponent(p.sourceTarget);
+  value=value.replace(/^file:\/\/\//i,'');
+  if(value.startsWith('\\bosch.com')) value='\\\\bosch.com'+value.slice('\\bosch.com'.length);
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(value).then(()=>showToast('公盘路径已复制')).catch(()=>fallbackCopy(value));
+  } else fallbackCopy(value);
+}
+function fallbackCopy(value){
+  const ta=document.createElement('textarea'); ta.value=value; document.body.appendChild(ta); ta.select();
+  try{document.execCommand('copy');showToast('公盘路径已复制')}catch(e){prompt('复制公盘路径：',value)}
+  ta.remove();
+}
+function closeSheet(){
+  document.getElementById('backdrop').classList.remove('show');
+  document.getElementById('sheet').classList.remove('show');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+
+window.addEventListener('error', function(e){
+  const list=document.getElementById('projectList');
+  if(list && !list.innerHTML){
+    list.innerHTML='<div class="empty">页面加载异常，请刷新后重试。</div>';
+  }
+});
+init();
+
+</script>
+</body>
+</html>
